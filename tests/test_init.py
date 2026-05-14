@@ -32,31 +32,31 @@ class TestInitModule:
 
     def test_core_imports_available(self):
         """Test that core imports are always available."""
-        import llm_switchboard.llm
+        from llm_switchboard import llm
 
         # Core components should always be available
-        assert "LLMClient" in llm_switchboard.llm.__all__
-        assert "ValidatingLLMClient" in llm_switchboard.llm.__all__
-        assert "get_llm" in llm_switchboard.llm.__all__
-        assert "register_llm" in llm_switchboard.llm.__all__
-        assert "list_available_llms" in llm_switchboard.llm.__all__
-        assert "Hook" in llm_switchboard.llm.__all__
-        assert "MethodConfig" in llm_switchboard.llm.__all__
-        assert "OutputValidationError" in llm_switchboard.llm.__all__
-        assert "GenerationMode" in llm_switchboard.llm.__all__
-        assert "LLMResponse" in llm_switchboard.llm.__all__
+        assert "LLMClient" in llm.__all__
+        assert "ValidatingLLMClient" in llm.__all__
+        assert "get_llm" in llm.__all__
+        assert "register_llm" in llm.__all__
+        assert "list_available_llms" in llm.__all__
+        assert "Hook" in llm.__all__
+        assert "MethodConfig" in llm.__all__
+        assert "OutputValidationError" in llm.__all__
+        assert "GenerationMode" in llm.__all__
+        assert "LLMResponse" in llm.__all__
 
         # Test that the objects are importable
-        assert hasattr(llm_switchboard.llm, "LLMClient")
-        assert hasattr(llm_switchboard.llm, "ValidatingLLMClient")
-        assert hasattr(llm_switchboard.llm, "get_llm")
-        assert hasattr(llm_switchboard.llm, "register_llm")
-        assert hasattr(llm_switchboard.llm, "list_available_llms")
-        assert hasattr(llm_switchboard.llm, "Hook")
-        assert hasattr(llm_switchboard.llm, "MethodConfig")
-        assert hasattr(llm_switchboard.llm, "OutputValidationError")
-        assert hasattr(llm_switchboard.llm, "GenerationMode")
-        assert hasattr(llm_switchboard.llm, "LLMResponse")
+        assert hasattr(llm, "LLMClient")
+        assert hasattr(llm, "ValidatingLLMClient")
+        assert hasattr(llm, "get_llm")
+        assert hasattr(llm, "register_llm")
+        assert hasattr(llm, "list_available_llms")
+        assert hasattr(llm, "Hook")
+        assert hasattr(llm, "MethodConfig")
+        assert hasattr(llm, "OutputValidationError")
+        assert hasattr(llm, "GenerationMode")
+        assert hasattr(llm, "LLMResponse")
 
     def test_registry_initialization(self):
         """Test that the registry is initialized correctly."""
