@@ -65,7 +65,7 @@ dev = [
     "flake8>=7.0.0",
     "mypy>=1.0.0",
     "pre-commit>=3.0.0",
-    "twine>=5.0.0",
+    "twine>=6.2.0",
 ]
 
 [tool.setuptools.packages.find]
