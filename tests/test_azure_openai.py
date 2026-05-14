@@ -4,7 +4,7 @@ from typing import Optional
 import pytest
 from pydantic import BaseModel
 
-from model_switchboard.llm import GenerationMode, get_llm
+from llm_switchboard.llm import GenerationMode, get_llm
 
 # Skip tests if required environment variables are not set
 pytestmark = [

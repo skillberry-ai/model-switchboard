@@ -4,7 +4,7 @@ from typing import List, Optional
 import pytest
 from pydantic import BaseModel
 
-from model_switchboard.llm import GenerationMode, get_llm
+from llm_switchboard.llm import GenerationMode, get_llm
 
 pytestmark = [
     pytest.mark.llm,

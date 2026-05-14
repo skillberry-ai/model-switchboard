@@ -3,9 +3,9 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from model_switchboard import configure_logging
-from model_switchboard.llm import get_llm
-from model_switchboard.llm.types import GenerationArgs
+from llm_switchboard import configure_logging
+from llm_switchboard.llm import get_llm
+from llm_switchboard.llm.types import GenerationArgs
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Configure Rich Logging (with visual formatting)
@@ -32,11 +32,11 @@ class TechnicalAnalysis(BaseModel):
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 2. Initialize Ollama LiteModel Switchboards
+# 2. Initialize Ollama LiteLLM clients
 # ──────────────────────────────────────────────────────────────────────────────
 
 try:
-    # Basic Ollama LiteModel Switchboards
+    # Basic Ollama LiteLLM clients
     OllamaLiteLLMClient = get_llm("litellm.ollama")
     OllamaLiteLLMClientOutputVal = get_llm("litellm.ollama.output_val")
 
@@ -51,11 +51,11 @@ try:
         include_schema_in_system_prompt=True,
     )
 
-    print("✅ Ollama LiteModel Switchboards initialized successfully")
+    print("✅ Ollama LiteLLM clients initialized successfully")
 
 except Exception as e:
     print(f"❌ Failed to initialize Ollama clients: {e}")
-    print("Make sure to install: pip install model-switchboard")
+    print("Make sure to install: pip install llm-switchboard")
     print("And set your OLLAMA_API_KEY and OLLAMA_API_URL environment variables.")
     exit(1)
 

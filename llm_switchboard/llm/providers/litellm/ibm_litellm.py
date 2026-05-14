@@ -29,7 +29,7 @@ class IBMLiteLLMClient(LiteLLMClient):
         **lite_kwargs: Any,
     ) -> None:
         """
-        Initialize the IBM LiteModel Switchboard.
+        Initialize the IBM LiteLLM client.
         Args:
             model_name: Name of the model (e.g. "GCP/claude-3-7-sonnet", "Azure/gpt-4o").
             api_key: IBM Third Party API key (falls back to env var IBM_THIRD_PARTY_API_KEY).
@@ -84,7 +84,7 @@ class IBMLiteLLMClientOutputVal(LiteLLMClientOutputVal):
         **lite_kwargs: Any,
     ) -> None:
         """
-        Initialize the IBM LiteModel Switchboard with output validation.
+        Initialize the IBM LiteLLM client with output validation.
         Args:
             model_name: Name of the model (e.g. "GCP/claude-3-7-sonnet", "Azure/gpt-4o").
             api_key: IBM Third Party API key (falls back to env var IBM_THIRD_PARTY_API_KEY).

@@ -3,9 +3,9 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from model_switchboard import configure_logging
-from model_switchboard.llm import GenerationMode, get_llm
-from model_switchboard.llm.types import GenerationArgs
+from llm_switchboard import configure_logging
+from llm_switchboard.llm import GenerationMode, get_llm
+from llm_switchboard.llm.types import GenerationArgs
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Configure Rich Logging (with visual formatting)

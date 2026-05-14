@@ -13,4 +13,4 @@ repos:
     rev: 7.1.1
     hooks:
       - id: flake8
-        args: [model_switchboard, tests]
+        args: [llm_switchboard, tests]

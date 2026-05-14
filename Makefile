@@ -38,12 +38,12 @@ test:
 	pytest
 
 coverage:
-	pytest --cov=model_switchboard --cov-report=term-missing
+	pytest --cov=llm_switchboard --cov-report=term-missing
 
 lint:
 	black --check .
 	isort --check-only .
-	flake8 model_switchboard tests
+	flake8 llm_switchboard tests
 
 format:
 	black .

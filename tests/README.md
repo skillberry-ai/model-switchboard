@@ -146,7 +146,7 @@ pytest tests/llm/ -v
 
 ### Run with Coverage
 ```bash
-pytest tests/llm/ --cov=model_switchboard.llm
+pytest tests/llm/ --cov=llm_switchboard.llm
 ```
 
 Output:
@@ -157,20 +157,20 @@ _______________________________________________ coverage: platform darwin, pytho
 
 Name                                                                             Stmts   Miss  Cover
 ----------------------------------------------------------------------------------------------------
-model-switchboard/model_switchboard/llm/__init__.py                                     29      7    76%
-model-switchboard/model_switchboard/llm/base.py                                        114      9    92%
-model-switchboard/model_switchboard/llm/output_parser.py                               154      4    97%
-model-switchboard/model_switchboard/llm/providers/__init__.py                            0      0   100%
-model-switchboard/model_switchboard/llm/providers/consts.py                              4      0   100%
-model-switchboard/model_switchboard/llm/providers/ibm_watsonx_ai/__init__.py             0      0   100%
-model-switchboard/model_switchboard/llm/providers/ibm_watsonx_ai/ibm_watsonx_ai.py     145     25    83%
-model-switchboard/model_switchboard/llm/providers/litellm/__init__.py                    0      0   100%
-model-switchboard/model_switchboard/llm/providers/litellm/litellm.py                   135     29    79%
-model-switchboard/model_switchboard/llm/providers/litellm/rits.py                       46     20    57%
-model-switchboard/model_switchboard/llm/providers/litellm/watsonx.py                    13      0   100%
-model-switchboard/model_switchboard/llm/providers/openai/__init__.py                     0      0   100%
-model-switchboard/model_switchboard/llm/providers/openai/openai.py                     187     69    63%
-model-switchboard/model_switchboard/llm/types.py                                        15      0   100%
+llm-switchboard/llm_switchboard/llm/__init__.py                                     29      7    76%
+llm-switchboard/llm_switchboard/llm/base.py                                        114      9    92%
+llm-switchboard/llm_switchboard/llm/output_parser.py                               154      4    97%
+llm-switchboard/llm_switchboard/llm/providers/__init__.py                            0      0   100%
+llm-switchboard/llm_switchboard/llm/providers/consts.py                              4      0   100%
+llm-switchboard/llm_switchboard/llm/providers/ibm_watsonx_ai/__init__.py             0      0   100%
+llm-switchboard/llm_switchboard/llm/providers/ibm_watsonx_ai/ibm_watsonx_ai.py     145     25    83%
+llm-switchboard/llm_switchboard/llm/providers/litellm/__init__.py                    0      0   100%
+llm-switchboard/llm_switchboard/llm/providers/litellm/litellm.py                   135     29    79%
+llm-switchboard/llm_switchboard/llm/providers/litellm/rits.py                       46     20    57%
+llm-switchboard/llm_switchboard/llm/providers/litellm/watsonx.py                    13      0   100%
+llm-switchboard/llm_switchboard/llm/providers/openai/__init__.py                     0      0   100%
+llm-switchboard/llm_switchboard/llm/providers/openai/openai.py                     187     69    63%
+llm-switchboard/llm_switchboard/llm/types.py                                        15      0   100%
 ----------------------------------------------------------------------------------------------------
 TOTAL                                                                              842    163    81%
 ================================================= 151 passed, 43 warnings in 339.00s (0:05:38) ==================================================

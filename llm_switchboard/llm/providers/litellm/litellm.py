@@ -2,7 +2,7 @@ try:
     import litellm
 except ImportError as e:
     raise ImportError(
-        "litellm is not installed. Please install it with `pip install model-switchboard`."
+        "litellm is not installed. Please install it with `pip install llm-switchboard`."
     ) from e
 
 from typing import Any, Dict, List, Optional, Type, Union
@@ -196,7 +196,7 @@ class LiteLLMClient(LLMClient):
             # Only allow chat and chat_async modes
             if mode_str not in ["chat", "chat_async"]:
                 raise ValueError(
-                    f"LiteModel Switchboards only support chat modes (chat, chat_async). "
+                    f"LiteLLM clients only support chat modes (chat, chat_async). "
                     f"Requested mode '{mode_str}' is not supported."
                 )
 
@@ -247,7 +247,7 @@ class LiteLLMClient(LLMClient):
             # Only allow chat and chat_async modes
             if mode_str not in ["chat", "chat_async"]:
                 raise ValueError(
-                    f"LiteModel Switchboards only support chat modes (chat, chat_async). "
+                    f"LiteLLM clients only support chat modes (chat, chat_async). "
                     f"Requested mode '{mode_str}' is not supported."
                 )
 
@@ -290,7 +290,7 @@ class LiteLLMClientOutputVal(ValidatingLLMClient):
         Args:
             model_name: Identifier or path for the LiteLLM model.
             hooks: Optional observability hooks (callable(event, payload)).
-            lite_kwargs: Extra arguments passed when initializing the litemodel switchboard.
+            lite_kwargs: Extra arguments passed when initializing the litellm client.
         """
         self.model_path = model_name
         self._lite_kwargs = lite_kwargs

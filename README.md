@@ -1,33 +1,33 @@
-# Model Switchboard
+# LLM Switchboard
 
-Model Switchboard is a small Python library for calling different model providers through one consistent interface. It supports synchronous and asynchronous generation, tool calls, structured output validation, provider-specific parameter mapping, and configurable logging.
+LLM Switchboard is a small Python library for calling different model providers through one consistent interface. It supports synchronous and asynchronous generation, tool calls, structured output validation, provider-specific parameter mapping, and configurable logging.
 
 ## Installation
 
 ```bash
-pip install model-switchboard
+pip install llm-switchboard
 ```
 
 For local development:
 
 ```bash
-git clone git@github.com:skillberry-ai/model-switchboard.git
-cd model-switchboard
+git clone git@github.com:skillberry-ai/llm-switchboard.git
+cd llm-switchboard
 pip install -e ".[dev,all]"
 ```
 
 LiteLLM is installed by default. Additional provider extras are available when you need direct SDK support:
 
 ```bash
-pip install "model-switchboard[openai]"
-pip install "model-switchboard[watsonx]"
-pip install "model-switchboard[all]"
+pip install "llm-switchboard[openai]"
+pip install "llm-switchboard[watsonx]"
+pip install "llm-switchboard[all]"
 ```
 
 ## Quick Start
 
 ```python
-from model_switchboard.llm import get_llm
+from llm_switchboard.llm import get_llm
 
 LiteLLMClient = get_llm("litellm")
 client = LiteLLMClient(model_name="openai/gpt-4o-mini")
@@ -45,7 +45,7 @@ export OPENAI_API_KEY=...
 ```
 
 ```python
-from model_switchboard.llm import get_llm
+from llm_switchboard.llm import get_llm
 
 client = get_llm("auto_from_env")()
 print(client.generate("Summarize the role of a model gateway."))
@@ -60,7 +60,7 @@ If `LLM_PROVIDER` is not set, `auto_from_env` defaults to `litellm`. Providers t
 LiteLLM is the default provider and works with any LiteLLM-supported model string.
 
 ```python
-from model_switchboard.llm import get_llm
+from llm_switchboard.llm import get_llm
 
 client = get_llm("litellm")(model_name="openai/gpt-4o-mini")
 response = client.generate(
@@ -79,11 +79,11 @@ Registered names:
 Install the direct OpenAI SDK extra when you want to use OpenAI clients without the LiteLLM adapter.
 
 ```bash
-pip install "model-switchboard[openai]"
+pip install "llm-switchboard[openai]"
 ```
 
 ```python
-from model_switchboard.llm import get_llm
+from llm_switchboard.llm import get_llm
 
 client = get_llm("openai.sync")(api_key="...")
 response = client.generate("Explain semantic versioning.", model="gpt-4o-mini")
@@ -105,7 +105,7 @@ Registered names:
 Ollama uses the LiteLLM dependency that is installed by default.
 
 ```python
-from model_switchboard.llm import get_llm
+from llm_switchboard.llm import get_llm
 
 client = get_llm("litellm.ollama")(
     model_name="llama3.1",
@@ -124,11 +124,11 @@ Registered names:
 Watsonx can be used through LiteLLM or the native SDK.
 
 ```bash
-pip install "model-switchboard[watsonx]"
+pip install "llm-switchboard[watsonx]"
 ```
 
 ```python
-from model_switchboard.llm import get_llm
+from llm_switchboard.llm import get_llm
 
 client = get_llm("litellm.watsonx")(
     model_name="meta-llama/llama-3-3-70b-instruct",
@@ -151,7 +151,7 @@ Use an output-validation provider when you want a Pydantic model, JSON schema, o
 ```python
 from pydantic import BaseModel
 
-from model_switchboard.llm import get_llm
+from llm_switchboard.llm import get_llm
 
 
 class Task(BaseModel):
@@ -172,8 +172,8 @@ print(task.title, task.priority)
 `GenerationArgs` provides provider-agnostic parameters such as `max_tokens`, `temperature`, `top_p`, `seed`, `timeout`, `stop_sequences`, and `stream`.
 
 ```python
-from model_switchboard.llm import get_llm
-from model_switchboard.llm.types import GenerationArgs
+from llm_switchboard.llm import get_llm
+from llm_switchboard.llm.types import GenerationArgs
 
 client = get_llm("litellm")(model_name="openai/gpt-4o-mini")
 args = GenerationArgs(max_tokens=120, temperature=0.3, seed=7)
@@ -186,15 +186,15 @@ Each provider maps supported arguments to its native SDK shape and ignores unsup
 ## Logging
 
 ```python
-from model_switchboard import configure_logging
+from llm_switchboard import configure_logging
 
 configure_logging(level="INFO")
 ```
 
 Environment variables:
 
-- `MODEL_SWITCHBOARD_LOG_LEVEL`
-- `MODEL_SWITCHBOARD_LOG_DIR`
+- `LLM_SWITCHBOARD_LOG_LEVEL`
+- `LLM_SWITCHBOARD_LOG_DIR`
 
 Sensitive keys such as API keys, tokens, credentials, and authorization headers are masked before logging.
 

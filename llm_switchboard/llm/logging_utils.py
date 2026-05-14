@@ -1,5 +1,5 @@
 """
-Centralized logging utilities for Model Switchboard with Rich formatting support.
+Centralized logging utilities for LLM Switchboard with Rich formatting support.
 
 This module provides comprehensive logging capabilities including:
 - Colored console output with Rich library
@@ -35,7 +35,7 @@ _LOGGERS: Dict[str, logging.Logger] = {}
 
 @dataclass
 class LogConfig:
-    """Configuration for Model Switchboard logging."""
+    """Configuration for LLM Switchboard logging."""
 
     level: str = "INFO"
     output_dir: Optional[Path] = None
@@ -79,7 +79,7 @@ def configure_logging(
     sensitive_keys: Optional[Set[str]] = None,
 ) -> LogConfig:
     """
-    Configure global logging settings for Model Switchboard.
+    Configure global logging settings for LLM Switchboard.
 
     Args:
         level: Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
@@ -134,8 +134,8 @@ def get_config() -> LogConfig:
     global _GLOBAL_CONFIG
     if _GLOBAL_CONFIG is None:
         # Check environment variables
-        level = os.getenv("MODEL_SWITCHBOARD_LOG_LEVEL", "INFO")
-        output_dir = os.getenv("MODEL_SWITCHBOARD_LOG_DIR")
+        level = os.getenv("LLM_SWITCHBOARD_LOG_LEVEL", "INFO")
+        output_dir = os.getenv("LLM_SWITCHBOARD_LOG_DIR")
         _GLOBAL_CONFIG = LogConfig(
             level=level,
             output_dir=Path(output_dir) if output_dir else None,
@@ -145,7 +145,7 @@ def get_config() -> LogConfig:
 
 def get_llm_logger(name: str) -> logging.Logger:
     """
-    Get or create a logger for Model Switchboard components.
+    Get or create a logger for LLM Switchboard components.
 
     Args:
         name: Logger name (typically class name)
@@ -157,7 +157,7 @@ def get_llm_logger(name: str) -> logging.Logger:
         return _LOGGERS[name]
 
     config = get_config()
-    logger = logging.getLogger(f"model_switchboard.{name}")
+    logger = logging.getLogger(f"llm_switchboard.{name}")
     logger.setLevel(getattr(logging, config.level))
     logger.propagate = False
 
@@ -185,7 +185,7 @@ def get_llm_logger(name: str) -> logging.Logger:
     # File handler (if configured)
     if config.log_to_file and config.output_dir:
         config.output_dir.mkdir(parents=True, exist_ok=True)
-        log_file = config.output_dir / f"model_switchboard_{name}.log"
+        log_file = config.output_dir / f"llm_switchboard_{name}.log"
 
         file_handler = RotatingFileHandler(
             log_file,
@@ -205,7 +205,7 @@ def get_llm_logger(name: str) -> logging.Logger:
 
 class LLMLogger:
     """
-    Enhanced logger for Model Switchboard with Rich formatting and utilities.
+    Enhanced logger for LLM Switchboard with Rich formatting and utilities.
     """
 
     def __init__(self, name: str, config: Optional[LogConfig] = None):

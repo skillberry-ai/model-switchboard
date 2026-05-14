@@ -1,4 +1,4 @@
-from model_switchboard.llm.types import GenerationMode, LLMResponse
+from llm_switchboard.llm.types import GenerationMode, LLMResponse
 
 
 class TestGenerationMode:

@@ -3,9 +3,9 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from model_switchboard import configure_logging
-from model_switchboard.llm import get_llm
-from model_switchboard.llm.types import GenerationArgs
+from llm_switchboard import configure_logging
+from llm_switchboard.llm import get_llm
+from llm_switchboard.llm.types import GenerationArgs
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Configure Rich Logging (with visual formatting)
@@ -32,11 +32,11 @@ class TechnicalAnalysis(BaseModel):
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 2. Initialize IBM LiteModel Switchboards
+# 2. Initialize IBM LiteLLM clients
 # ──────────────────────────────────────────────────────────────────────────────
 
 try:
-    # Basic IBM LiteModel Switchboards
+    # Basic IBM LiteLLM clients
     IBMLiteLLMClient = get_llm("litellm.ibm")
     IBMLiteLLMClientOutputVal = get_llm("litellm.ibm.output_val")
 
@@ -51,11 +51,11 @@ try:
         include_schema_in_system_prompt=True,
     )
 
-    print("✅ IBM LiteModel Switchboards initialized successfully")
+    print("✅ IBM LiteLLM clients initialized successfully")
 
 except Exception as e:
     print(f"❌ Failed to initialize IBM clients: {e}")
-    print("Make sure to install: pip install model-switchboard")
+    print("Make sure to install: pip install llm-switchboard")
     print("And set your IBM_THIRD_PARTY_API_KEY environment variable.")
     exit(1)
 

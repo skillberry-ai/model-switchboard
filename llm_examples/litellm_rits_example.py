@@ -3,9 +3,9 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from model_switchboard import configure_logging
-from model_switchboard.llm import get_llm
-from model_switchboard.llm.types import GenerationArgs
+from llm_switchboard import configure_logging
+from llm_switchboard.llm import get_llm
+from llm_switchboard.llm.types import GenerationArgs
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Configure Rich Logging (with visual formatting)
@@ -32,11 +32,11 @@ class TechnicalAnalysis(BaseModel):
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 2. Initialize RITS LiteModel Switchboards
+# 2. Initialize RITS LiteLLM clients
 # ──────────────────────────────────────────────────────────────────────────────
 
 try:
-    # Basic RITS LiteModel Switchboards
+    # Basic RITS LiteLLM clients
     RITSLiteLLMClient = get_llm("litellm.rits")
     RITSLiteLLMClientOutputVal = get_llm("litellm.rits.output_val")
 
@@ -53,11 +53,11 @@ try:
         include_schema_in_system_prompt=True,
     )
 
-    print("✅ RITS LiteModel Switchboards initialized successfully")
+    print("✅ RITS LiteLLM clients initialized successfully")
 
 except Exception as e:
     print(f"❌ Failed to initialize RITS clients: {e}")
-    print("Make sure to install: pip install model-switchboard")
+    print("Make sure to install: pip install llm-switchboard")
     print("And set your RITS_API_KEY and RITS_API_URL environment variables.")
     exit(1)
 

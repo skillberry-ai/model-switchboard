@@ -4,15 +4,15 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from model_switchboard.llm.base import (
+from llm_switchboard.llm.base import (
     LLMClient,
     MethodConfig,
 )
-from model_switchboard.llm.types import GenerationMode
+from llm_switchboard.llm.types import GenerationMode
 
 
 class MockLLMClient(LLMClient):
-    """Mock Model Switchboard for testing."""
+    """Mock LLM Switchboard for testing."""
 
     @classmethod
     def provider_class(cls) -> Type:

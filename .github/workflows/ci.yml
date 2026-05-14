@@ -39,10 +39,10 @@ jobs:
           isort --check-only .
 
       - name: Lint
-        run: flake8 model_switchboard tests
+        run: flake8 llm_switchboard tests
 
       - name: Test with coverage
-        run: pytest --cov=model_switchboard --cov-report=term-missing --cov-report=xml
+        run: pytest --cov=llm_switchboard --cov-report=term-missing --cov-report=xml
 
       - name: Upload coverage
         if: matrix.python-version == '3.12'

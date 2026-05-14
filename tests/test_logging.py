@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from model_switchboard.llm.logging_utils import (
+from llm_switchboard.llm.logging_utils import (
     LLMLogger,
     LogConfig,
     configure_logging,
@@ -77,7 +77,7 @@ class TestGetConfig:
     def test_get_default_config(self):
         """Test getting default configuration."""
         # Reset global config
-        import model_switchboard.llm.logging_utils as logging_utils
+        import llm_switchboard.llm.logging_utils as logging_utils
 
         logging_utils._GLOBAL_CONFIG = None
 
@@ -87,13 +87,13 @@ class TestGetConfig:
     def test_get_config_from_env(self, monkeypatch):
         """Test getting configuration from environment variables."""
         # Reset global config
-        import model_switchboard.llm.logging_utils as logging_utils
+        import llm_switchboard.llm.logging_utils as logging_utils
 
         logging_utils._GLOBAL_CONFIG = None
 
-        monkeypatch.setenv("MODEL_SWITCHBOARD_LOG_LEVEL", "DEBUG")
+        monkeypatch.setenv("LLM_SWITCHBOARD_LOG_LEVEL", "DEBUG")
         with tempfile.TemporaryDirectory() as tmpdir:
-            monkeypatch.setenv("MODEL_SWITCHBOARD_LOG_DIR", tmpdir)
+            monkeypatch.setenv("LLM_SWITCHBOARD_LOG_DIR", tmpdir)
             config = get_config()
             assert config.level == "DEBUG"
             assert config.output_dir == Path(tmpdir)
@@ -274,7 +274,7 @@ class TestFileLogging:
         logger.info("Test message")
 
         # No log files should be created in current directory
-        log_files = list(Path(".").glob("model_switchboard_*.log"))
+        log_files = list(Path(".").glob("llm_switchboard_*.log"))
         assert len(log_files) == 0
 
 
