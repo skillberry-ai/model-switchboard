@@ -101,8 +101,8 @@ jobs:
         run: |
           black --check .
           isort --check-only .
-          flake8 model_switchboard tests
-          pytest --cov=model_switchboard --cov-report=term-missing
+          flake8 llm_switchboard tests
+          pytest --cov=llm_switchboard --cov-report=term-missing
 
       - name: Commit generated tests
         if: steps.pr.outputs.should_run == 'true'

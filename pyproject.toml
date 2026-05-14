@@ -3,7 +3,7 @@ requires = ["setuptools>=69", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "model-switchboard"
+name = "llm-switchboard"
 version = "0.1.0"
 description = "A provider-agnostic Python interface for routing generation calls across LiteLLM, OpenAI, Ollama, and Watsonx"
 readme = "README.md"
@@ -11,7 +11,7 @@ requires-python = ">=3.10"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 authors = [
-    { name = "Model Switchboard maintainers" },
+    { name = "Osher Elhadad", email = "Osher.Elhadad@ibm.com" },
 ]
 keywords = ["llm", "openai", "watsonx", "litellm", "ollama", "model-routing"]
 classifiers = [
@@ -33,9 +33,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/skillberry-ai/model-switchboard"
-Repository = "https://github.com/skillberry-ai/model-switchboard"
-Issues = "https://github.com/skillberry-ai/model-switchboard/issues"
+Homepage = "https://github.com/skillberry-ai/llm-switchboard"
+Repository = "https://github.com/skillberry-ai/llm-switchboard"
+Issues = "https://github.com/skillberry-ai/llm-switchboard/issues"
 
 [project.optional-dependencies]
 openai = [
@@ -70,7 +70,7 @@ dev = [
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["model_switchboard*"]
+include = ["llm_switchboard*"]
 exclude = ["tests*", "llm_examples*"]
 
 [tool.black]
@@ -90,7 +90,7 @@ markers = [
 ]
 
 [tool.coverage.run]
-source = ["model_switchboard"]
+source = ["llm_switchboard"]
 
 [tool.coverage.report]
 show_missing = true

@@ -10,7 +10,7 @@ from .litellm import (
 @register_llm("litellm.watsonx")
 class WatsonxLiteLLMClient(LiteLLMClient):
     """
-    Specialized LiteModel Switchboard for Watsox models.
+    Specialized LiteLLM client for Watsonx models.
 
     Automatically prefixes the model path with "watsonx/".
     """
@@ -19,7 +19,7 @@ class WatsonxLiteLLMClient(LiteLLMClient):
         self, model_name: str, hooks: Optional[List[Hook]] = None, **lite_kwargs: Any
     ) -> None:
         """
-        Initialize a Watsonx LiteModel Switchboard.
+        Initialize a Watsonx LiteLLM client.
 
         Args:
             model_name: Watsonx model identifier (e.g. "gpt-j-6b").
@@ -36,7 +36,7 @@ class WatsonxLiteLLMClient(LiteLLMClient):
 @register_llm("litellm.watsonx.output_val")
 class WatsonxLiteLLMClientOutputVal(LiteLLMClientOutputVal):
     """
-    Validating LiteModel Switchboard for IBM Watsonx models.
+    Validating LiteLLM client for IBM Watsonx models.
 
     Inherits all JSON/Pydantic/type-based output validation, retry logic,
     and batch/async support from LiteLLMClientOutputVal. Automatically
@@ -47,7 +47,7 @@ class WatsonxLiteLLMClientOutputVal(LiteLLMClientOutputVal):
         self, model_name: str, hooks: Optional[List[Hook]] = None, **lite_kwargs: Any
     ) -> None:
         """
-        Initialize a Watsonx LiteModel Switchboard with output validation.
+        Initialize a Watsonx LiteLLM client with output validation.
 
         Args:
             model_name: Watsonx model identifier (e.g. "gpt-j-6b").

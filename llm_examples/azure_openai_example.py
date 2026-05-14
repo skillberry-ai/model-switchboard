@@ -4,9 +4,9 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from model_switchboard import configure_logging
-from model_switchboard.llm import GenerationMode, get_llm
-from model_switchboard.llm.types import GenerationArgs
+from llm_switchboard import configure_logging
+from llm_switchboard.llm import GenerationMode, get_llm
+from llm_switchboard.llm.types import GenerationArgs
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Configure Rich Logging (with visual formatting)
@@ -88,7 +88,7 @@ try:
 
 except Exception as e:
     print(f"❌ Failed to initialize Azure OpenAI clients: {e}")
-    print("Make sure to install: pip install model-switchboard[openai]")
+    print("Make sure to install: pip install llm-switchboard[openai]")
     print(
         "And set your AZURE_OPENAI_API_KEY, AZURE_API_BASE and AZURE_API_VERSION environment variables"
     )

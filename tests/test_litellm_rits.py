@@ -4,7 +4,7 @@ from typing import List, Optional
 import pytest
 from pydantic import BaseModel
 
-from model_switchboard.llm import get_llm
+from llm_switchboard.llm import get_llm
 
 # Skip tests if required environment variables are not set
 pytestmark = [
@@ -40,7 +40,7 @@ class TechnicalAnalysis(BaseModel):
 
 @pytest.fixture(scope="function")
 def rits_client():
-    """Initialize RITS LiteModel Switchboard"""
+    """Initialize RITS LiteLLM client"""
     RITSLiteLLMClient = get_llm("litellm.rits")
 
     return RITSLiteLLMClient(
@@ -54,7 +54,7 @@ def rits_client():
 
 @pytest.fixture(scope="function")
 def rits_structured_client():
-    """Initialize RITS LiteModel Switchboard with output validation"""
+    """Initialize RITS LiteLLM client with output validation"""
     RITSLiteLLMClientOutputVal = get_llm("litellm.rits.output_val")
 
     return RITSLiteLLMClientOutputVal(

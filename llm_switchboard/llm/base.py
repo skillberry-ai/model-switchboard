@@ -15,7 +15,7 @@ Hook = Callable[[str, Dict[str, Any]], None]
 
 def register_llm(name: str) -> Callable[[Type[T]], Type[T]]:
     """
-    Register an Model Switchboard class with the global registry.
+    Register an client class with the global registry.
 
     Args:
         name: Unique identifier for the client
@@ -33,7 +33,7 @@ def register_llm(name: str) -> Callable[[Type[T]], Type[T]]:
 
 def get_llm(name: str) -> Type["LLMClient"]:
     """
-    Retrieve an Model Switchboard class from the global registry.
+    Retrieve an client class from the global registry.
 
     Args:
         name: Identifier for the client
@@ -61,10 +61,10 @@ def get_llm(name: str) -> Type["LLMClient"]:
 
 def list_available_llms() -> List[str]:
     """
-    List all registered Model Switchboard names.
+    List all registered client names.
 
     Returns:
-        List of registered Model Switchboard names
+        List of registered client names
     """
     if not _REGISTRY:
         # Import providers to populate registry

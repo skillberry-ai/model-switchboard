@@ -2,7 +2,7 @@ try:
     import openai
 except ImportError as e:
     raise ImportError(
-        "OpenAI library is required for this module. Please install it with 'pip install model-switchboard[openai]'"
+        "OpenAI library is required for this module. Please install it with 'pip install llm-switchboard[openai]'"
     ) from e
 
 from typing import Any, Dict, List, Optional, Union

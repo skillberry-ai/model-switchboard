@@ -5,8 +5,8 @@ from unittest.mock import Mock, patch
 import pytest
 from pydantic import BaseModel
 
-from model_switchboard.llm.base import LLMClient
-from model_switchboard.llm.output_parser import (
+from llm_switchboard.llm.base import LLMClient
+from llm_switchboard.llm.output_parser import (
     OutputValidationError,
     ValidatingLLMClient,
     json_schema_to_pydantic_model,
@@ -22,7 +22,7 @@ class ValidationTestModel(BaseModel):
 
 
 class MockLLMClient(LLMClient):
-    """Mock Model Switchboard for testing."""
+    """Mock LLM Switchboard for testing."""
 
     def __init__(self, **kwargs):
         self.mock_client = Mock()
@@ -41,7 +41,7 @@ class MockLLMClient(LLMClient):
 
 
 class MockValidatingLLMClient(ValidatingLLMClient):
-    """Mock validating Model Switchboard for testing."""
+    """Mock validating LLM Switchboard for testing."""
 
     def __init__(self, **kwargs):
         self.mock_client = Mock()
@@ -323,7 +323,7 @@ class TestValidatingLLMClient:
         client = MockValidatingLLMClient()
         schema = {"type": "object", "properties": {"name": {"type": "string"}}}
 
-        with patch("model_switchboard.llm.output_parser.jsonschema") as mock_jsonschema:
+        with patch("llm_switchboard.llm.output_parser.jsonschema") as mock_jsonschema:
             mock_jsonschema.validate.return_value = None
 
             result = client._validate('{"name": "John"}', schema)
@@ -336,7 +336,7 @@ class TestValidatingLLMClient:
         client = MockValidatingLLMClient()
         schema = {"type": "object"}
 
-        with patch("model_switchboard.llm.output_parser.jsonschema", None):
+        with patch("llm_switchboard.llm.output_parser.jsonschema", None):
             with pytest.raises(ImportError, match="jsonschema is required"):
                 client._validate('{"name": "John"}', schema)
 
@@ -345,7 +345,7 @@ class TestValidatingLLMClient:
         client = MockValidatingLLMClient()
         schema = {"type": "object", "properties": {"name": {"type": "string"}}}
 
-        with patch("model_switchboard.llm.output_parser.jsonschema") as mock_jsonschema:
+        with patch("llm_switchboard.llm.output_parser.jsonschema") as mock_jsonschema:
             # Create a proper ValidationError mock
             class MockValidationError(Exception):
                 def __init__(self, message):
@@ -623,7 +623,7 @@ class TestEdgeCases:
     def test_jsonschema_import_error(self):
         """Test handling when jsonschema is not available."""
         # Mock jsonschema as None to simulate import error
-        with patch("model_switchboard.llm.output_parser.jsonschema", None):
+        with patch("llm_switchboard.llm.output_parser.jsonschema", None):
             client = MockValidatingLLMClient()
             schema = {"type": "object", "properties": {"name": {"type": "string"}}}
 

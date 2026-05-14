@@ -1,4 +1,4 @@
-"""Core registry, types, and provider imports for Model Switchboard."""
+"""Core registry, types, and provider imports for LLM Switchboard."""
 
 from typing import Dict, Type
 

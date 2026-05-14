@@ -6,7 +6,7 @@ try:
     from ibm_watsonx_ai.foundation_models import ModelInference
 except ImportError as e:
     raise ImportError(
-        "Please install the ibm-watsonx-ai package: pip install 'model-switchboard[watsonx]'"
+        "Please install the ibm-watsonx-ai package: pip install 'llm-switchboard[watsonx]'"
     ) from e
 
 from pydantic import BaseModel

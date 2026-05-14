@@ -2,7 +2,7 @@ import importlib.util
 
 import pytest
 
-from model_switchboard.llm import get_llm
+from llm_switchboard.llm import get_llm
 
 LITELLM_AVAILABLE = importlib.util.find_spec("litellm") is not None
 

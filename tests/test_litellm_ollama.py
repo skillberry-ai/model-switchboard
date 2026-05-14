@@ -4,7 +4,7 @@ from typing import List, Optional
 import pytest
 from pydantic import BaseModel
 
-from model_switchboard.llm import get_llm
+from llm_switchboard.llm import get_llm
 
 # Skip tests if required environment variables are not set
 pytestmark = [
@@ -40,7 +40,7 @@ class TechnicalAnalysis(BaseModel):
 
 @pytest.fixture(scope="function")
 def ollama_client():
-    """Initialize Ollama LiteModel Switchboard"""
+    """Initialize Ollama LiteLLM client"""
     OllamaLiteLLMClient = get_llm("litellm.ollama")
 
     return OllamaLiteLLMClient(
@@ -51,7 +51,7 @@ def ollama_client():
 
 @pytest.fixture(scope="function")
 def ollama_structured_client():
-    """Initialize Ollama LiteModel Switchboard with output validation"""
+    """Initialize Ollama LiteLLM client with output validation"""
     OllamaLiteLLMClientOutputVal = get_llm("litellm.ollama.output_val")
 
     return OllamaLiteLLMClientOutputVal(
