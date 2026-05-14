@@ -1,0 +1,61 @@
+from typing import Any, List, Optional
+
+from ...base import Hook, register_llm
+from .litellm import (
+    LiteLLMClient,
+    LiteLLMClientOutputVal,
+)
+
+
+@register_llm("litellm.watsonx")
+class WatsonxLiteLLMClient(LiteLLMClient):
+    """
+    Specialized LiteModel Switchboard for Watsox models.
+
+    Automatically prefixes the model path with "watsonx/".
+    """
+
+    def __init__(
+        self, model_name: str, hooks: Optional[List[Hook]] = None, **lite_kwargs: Any
+    ) -> None:
+        """
+        Initialize a Watsonx LiteModel Switchboard.
+
+        Args:
+            model_name: Watsonx model identifier (e.g. "gpt-j-6b").
+            hooks: Optional observability hooks (callable(event, payload)).
+            lite_kwargs: Additional keyword args passed to the underlying LiteLLM constructor.
+        """
+        # Construct the model_path for Watsonx
+        model_path = f"watsonx/{model_name}"
+
+        # Delegate to the validating LiteLLMClient
+        super().__init__(model_name=model_path, hooks=hooks, **lite_kwargs)
+
+
+@register_llm("litellm.watsonx.output_val")
+class WatsonxLiteLLMClientOutputVal(LiteLLMClientOutputVal):
+    """
+    Validating LiteModel Switchboard for IBM Watsonx models.
+
+    Inherits all JSON/Pydantic/type-based output validation, retry logic,
+    and batch/async support from LiteLLMClientOutputVal. Automatically
+    prefixes the model path with "watsonx/".
+    """
+
+    def __init__(
+        self, model_name: str, hooks: Optional[List[Hook]] = None, **lite_kwargs: Any
+    ) -> None:
+        """
+        Initialize a Watsonx LiteModel Switchboard with output validation.
+
+        Args:
+            model_name: Watsonx model identifier (e.g. "gpt-j-6b").
+            hooks: Optional observability hooks (callable(event, payload)).
+            lite_kwargs: Additional keyword args passed to the underlying LiteLLM constructor.
+        """
+        # Construct the model_path for Watsonx
+        model_path = f"watsonx/{model_name}"
+
+        # Delegate to the validating LiteLLMClient
+        super().__init__(model_name=model_path, hooks=hooks, **lite_kwargs)

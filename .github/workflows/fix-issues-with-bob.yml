@@ -1,0 +1,82 @@
+name: Fix Issues with Bob
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  fix:
+    if: github.event.label.name == 'fix-with-bob'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.SKILLBERRY_BOT_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Bob
+        run: curl -fsSL https://bob.ibm.com/download/bobshell.sh | bash -s -- --package-manager npm
+
+      - name: Configure Git
+        run: |
+          git config user.name "skillberry-bot"
+          git config user.email "skillberry-bot@users.noreply.github.com"
+
+      - name: Create branch
+        run: |
+          git checkout -b "fix-issue-${{ github.event.issue.number }}"
+
+      - name: Apply fix
+        env:
+          BOBSHELL_API_KEY: ${{ secrets.BOBSHELL_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.SKILLBERRY_BOT_TOKEN }}
+        run: |
+          set -euo pipefail
+          bob --accept-license --yolo -p "Fix issue #${{ github.event.issue.number }} in ${{ github.repository }}.
+
+Title:
+${{ github.event.issue.title }}
+
+Body:
+${{ github.event.issue.body }}
+
+Keep the change focused, update tests when appropriate, and preserve the public Python package conventions."
+
+      - name: Commit and push
+        id: changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.SKILLBERRY_BOT_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git add -A
+          git commit -m "Fix issue #${{ github.event.issue.number }}"
+          git push --set-upstream origin "fix-issue-${{ github.event.issue.number }}"
+          echo "has_changes=true" >> "$GITHUB_OUTPUT"
+
+      - name: Open pull request
+        if: steps.changes.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.SKILLBERRY_BOT_TOKEN }}
+        run: |
+          gh pr create \
+            --title "Fix issue #${{ github.event.issue.number }}" \
+            --body "Addresses #${{ github.event.issue.number }}." \
+            --base main \
+            --head "fix-issue-${{ github.event.issue.number }}"

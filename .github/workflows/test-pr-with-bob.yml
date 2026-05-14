@@ -1,0 +1,118 @@
+name: Test PR with Bob
+
+on:
+  workflow_run:
+    workflows: ["Test PR with Bob - Trigger"]
+    types: [completed]
+
+permissions:
+  actions: read
+  checks: write
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  test:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Load PR context
+        id: pr
+        uses: actions/github-script@v7
+        env:
+          BOB_ALLOWED_HEAD_OWNERS: ${{ vars.BOB_ALLOWED_HEAD_OWNERS }}
+        with:
+          github-token: ${{ secrets.SKILLBERRY_BOT_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const os = require('os');
+            const path = require('path');
+            const { execFileSync } = require('child_process');
+            const run = context.payload.workflow_run;
+            const { data } = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: run.id,
+            });
+            const artifact = data.artifacts.find(a => a.name === 'pr-context');
+            if (!artifact) {
+              core.setFailed('Missing pr-context artifact');
+              return;
+            }
+            const zip = await github.rest.actions.downloadArtifact({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              artifact_id: artifact.id,
+              archive_format: 'zip',
+            });
+            const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'pr-context-'));
+            const zipPath = path.join(dir, 'context.zip');
+            fs.writeFileSync(zipPath, Buffer.from(zip.data));
+            execFileSync('unzip', ['-q', zipPath, '-d', dir]);
+            const payload = JSON.parse(fs.readFileSync(path.join(dir, 'context.json'), 'utf8'));
+            const allowed = (process.env.BOB_ALLOWED_HEAD_OWNERS || `${context.repo.owner},skillberry-bot`)
+              .split(',')
+              .map(v => v.trim())
+              .filter(Boolean);
+            if (!allowed.includes(payload.head_owner)) {
+              core.info(`Skipping untrusted head owner: ${payload.head_owner}`);
+              core.setOutput('should_run', 'false');
+              return;
+            }
+            core.setOutput('should_run', 'true');
+            for (const [key, value] of Object.entries(payload)) {
+              core.setOutput(key, Array.isArray(value) ? value.join(',') : String(value));
+            }
+
+      - name: Checkout PR
+        if: steps.pr.outputs.should_run == 'true'
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ steps.pr.outputs.head_repo }}
+          ref: ${{ steps.pr.outputs.head_sha }}
+          token: ${{ secrets.SKILLBERRY_BOT_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        if: steps.pr.outputs.should_run == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        if: steps.pr.outputs.should_run == 'true'
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev,all]"
+
+      - name: Ask Bob for focused tests
+        if: steps.pr.outputs.should_run == 'true'
+        env:
+          BOBSHELL_API_KEY: ${{ secrets.BOBSHELL_API_KEY }}
+        run: |
+          bob --accept-license --yolo -p "Review this pull request and add focused tests only when they are missing. Keep changes minimal and compatible with this Python package."
+
+      - name: Run checks
+        if: steps.pr.outputs.should_run == 'true'
+        run: |
+          black --check .
+          isort --check-only .
+          flake8 model_switchboard tests
+          pytest --cov=model_switchboard --cov-report=term-missing
+
+      - name: Commit generated tests
+        if: steps.pr.outputs.should_run == 'true'
+        run: |
+          set -euo pipefail
+          if [ -z "$(git status --porcelain)" ]; then
+            exit 0
+          fi
+          git config user.name "skillberry-bot"
+          git config user.email "skillberry-bot@users.noreply.github.com"
+          git add -A
+          git commit -m "Add focused PR tests"
+          git push origin HEAD:${{ steps.pr.outputs.head_ref }}

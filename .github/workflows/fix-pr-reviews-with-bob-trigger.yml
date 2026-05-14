@@ -1,0 +1,41 @@
+name: Fix PR Reviews with Bob - Trigger
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+permissions:
+  actions: write
+  contents: read
+  pull-requests: read
+
+jobs:
+  collect:
+    if: >-
+      (github.event.review.state == 'commented' ||
+       github.event.review.state == 'changes_requested') &&
+      contains(github.event.pull_request.labels.*.name, 'fix-with-bob') &&
+      contains(github.event.review.body, '@skillberry-bot')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Write context
+        run: |
+          mkdir -p pr-review-context
+          cat > pr-review-context/context.json <<'JSON'
+          {
+            "pr_number": ${{ github.event.pull_request.number }},
+            "review_id": ${{ github.event.review.id }},
+            "head_repo": ${{ toJson(github.event.pull_request.head.repo.full_name) }},
+            "head_ref": ${{ toJson(github.event.pull_request.head.ref) }},
+            "head_sha": ${{ toJson(github.event.pull_request.head.sha) }},
+            "head_owner": ${{ toJson(github.event.pull_request.head.repo.owner.login) }}
+          }
+          JSON
+
+      - name: Upload context
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-review-context
+          path: pr-review-context/context.json
+          retention-days: 3

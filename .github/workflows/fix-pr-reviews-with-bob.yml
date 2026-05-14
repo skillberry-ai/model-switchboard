@@ -1,0 +1,109 @@
+name: Fix PR Reviews with Bob
+
+on:
+  workflow_run:
+    workflows: ["Fix PR Reviews with Bob - Trigger"]
+    types: [completed]
+
+permissions:
+  actions: read
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  fix:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Load PR context
+        id: pr
+        uses: actions/github-script@v7
+        env:
+          BOB_ALLOWED_HEAD_OWNERS: ${{ vars.BOB_ALLOWED_HEAD_OWNERS }}
+        with:
+          github-token: ${{ secrets.SKILLBERRY_BOT_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const os = require('os');
+            const path = require('path');
+            const { execFileSync } = require('child_process');
+            const run = context.payload.workflow_run;
+            const { data } = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: run.id,
+            });
+            const artifact = data.artifacts.find(a => a.name === 'pr-review-context');
+            if (!artifact) {
+              core.setFailed('Missing pr-review-context artifact');
+              return;
+            }
+            const zip = await github.rest.actions.downloadArtifact({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              artifact_id: artifact.id,
+              archive_format: 'zip',
+            });
+            const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'pr-review-'));
+            const zipPath = path.join(dir, 'context.zip');
+            fs.writeFileSync(zipPath, Buffer.from(zip.data));
+            execFileSync('unzip', ['-q', zipPath, '-d', dir]);
+            const payload = JSON.parse(fs.readFileSync(path.join(dir, 'context.json'), 'utf8'));
+            const allowed = (process.env.BOB_ALLOWED_HEAD_OWNERS || `${context.repo.owner},skillberry-bot`)
+              .split(',')
+              .map(v => v.trim())
+              .filter(Boolean);
+            if (!allowed.includes(payload.head_owner)) {
+              core.info(`Skipping untrusted head owner: ${payload.head_owner}`);
+              core.setOutput('should_run', 'false');
+              return;
+            }
+            core.setOutput('should_run', 'true');
+            for (const [key, value] of Object.entries(payload)) {
+              core.setOutput(key, String(value));
+            }
+
+      - name: Checkout PR
+        if: steps.pr.outputs.should_run == 'true'
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ steps.pr.outputs.head_repo }}
+          ref: ${{ steps.pr.outputs.head_sha }}
+          token: ${{ secrets.SKILLBERRY_BOT_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        if: steps.pr.outputs.should_run == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Bob
+        if: steps.pr.outputs.should_run == 'true'
+        run: curl -fsSL https://bob.ibm.com/download/bobshell.sh | bash -s -- --package-manager npm
+
+      - name: Apply review feedback
+        if: steps.pr.outputs.should_run == 'true'
+        env:
+          BOBSHELL_API_KEY: ${{ secrets.BOBSHELL_API_KEY }}
+          GH_TOKEN: ${{ secrets.SKILLBERRY_BOT_TOKEN }}
+        run: |
+          gh api "repos/${{ github.repository }}/pulls/${{ steps.pr.outputs.pr_number }}/comments" --paginate > review-comments.json
+          bob --accept-license --yolo -p "Address actionable review comments for PR #${{ steps.pr.outputs.pr_number }}. Review comments are stored in review-comments.json. Keep changes focused and preserve existing public APIs unless the review explicitly asks otherwise."
+
+      - name: Commit and push
+        if: steps.pr.outputs.should_run == 'true'
+        run: |
+          set -euo pipefail
+          if [ -z "$(git status --porcelain)" ]; then
+            exit 0
+          fi
+          git config user.name "skillberry-bot"
+          git config user.email "skillberry-bot@users.noreply.github.com"
+          git add -A
+          git reset review-comments.json
+          git commit -m "Address PR review feedback"
+          git push origin HEAD:${{ steps.pr.outputs.head_ref }}

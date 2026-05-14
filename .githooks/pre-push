@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+if [ -z "$ENABLE_QC" ]; then
+    echo "ENABLE_QC is not set. Skipping local quality checks."
+    exit 0
+fi
+
+echo "Running local quality checks before push."
+make verify
